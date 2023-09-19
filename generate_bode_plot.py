@@ -1,31 +1,32 @@
 import numpy as np; import matplotlib.pyplot as plt
 
-poles = [-1000+0j, -2000+0j, -500+60j, -500-60j]
-zeros = [0-0j]
+poles = [-10+0j, -1000+0j]
+zeros = [0 - 0j]
 
-def magnitude(omega, poles, zeros):
+def geom_magnitude_func(omega, poles, zeros):
     product_poles = 1
     product_zeros = 1
     
     for pole in poles:
-        distance = abs(omega - pole)
-        product_poles *= distance
+        pole_dist = abs(omega - pole)
+        product_poles *= pole_dist
         
     for zero in zeros:
-        distance = abs(omega - zero)
-        product_zeros *= distance
-        
-    return 20 * np.log10(product_zeros / product_poles)
+        zero_dist = abs(omega - zero)
+        product_zeros *= zero_dist
 
-omegas = np.logspace(1, 4, 500)  # 10^1 < Frequencies < 10^4
-magnitudes = [magnitude(1j*omega, poles, zeros) for omega in omegas]
+    linear_magnitude = (product_zeros / product_poles)
+    dB_magnitude = 20 * np.log10(linear_magnitude)
+    return dB_magnitude
+
+omegas = np.logspace(0, 5, 500) 
+dB_magnitude_array = [geom_magnitude_func(1j*omega, poles, zeros) for omega in omegas]
 
 plt.figure(figsize=(10, 6))
-plt.semilogx(omegas, magnitudes, label="Magnitude (dB)")
-plt.title("Bode Plot")
-plt.xlabel("Frequency (Hz)")
+plt.semilogx(omegas, dB_magnitude_array)
+plt.title("Magnitude Bode Plot")
+plt.xlabel("Frequency (w)")
 plt.ylabel("Magnitude (dB)")
 plt.grid(which="both", linestyle="--", linewidth=0.5)
-plt.legend()
 plt.tight_layout()
 plt.show()
