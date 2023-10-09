@@ -1,0 +1,27 @@
+import socket
+from datetime import datetime
+
+
+def main():
+    open_ports = []
+    target = input("Enter a target to scan: ")
+    start_port = int(input("Enter a start port: "))
+    end_port = int(input("Enter a end port: "))
+
+    print("Scanning started at ", datetime.now())
+    for port in range(start_port, end_port + 1):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.1)
+        result = s.connect_ex((target, port))
+        if result == 0:
+            print(f"Port {port} is open")
+            open_ports.append(port)
+        else:
+            print(f"Port {port} is closed")
+        s.close()
+
+    print("Port Scanning Completed\nAll Open Ports: ", open_ports)
+
+if __name__ == "__main__":
+    main()
+

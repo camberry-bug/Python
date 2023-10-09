@@ -1,7 +1,7 @@
 import numpy as np; import matplotlib.pyplot as plt
 
-poles = [-0.15962759-0.30672043j, -0.08448933-0.74694248j, -0.03060899-0.93657699j, -0.00707464-0.99597757j,  -0.15962759+0.30672043j, -0.08448933+0.74694248j, -0.03060899+0.93657699j,  -0.00707464+0.99597757j]
-zeros =  [0.+3.58304998j, 0.+1.45384719j,  0.+1.14968336j, 0.+1.07776441j, 0.-3.58304998j,  0.-1.45384719j,  0.-1.14968336j,   0.-1.07776441j]
+poles = [-12678 + 12575j, -12678 - 12575j, -222 + 220j, -222 - 220j]
+zeros =  [0 +0j, 0 + 0j]
 
 def geom_magnitude_func(omega, poles, zeros):
     product_poles = 1
@@ -19,7 +19,7 @@ def geom_magnitude_func(omega, poles, zeros):
     dB_magnitude = 20 * np.log10(linear_magnitude)
     return dB_magnitude
 
-omegas = np.logspace(0, 5, 500) 
+omegas = np.logspace(-1, 5, 500) 
 dB_magnitude_array = [geom_magnitude_func(1j*omega, poles, zeros) for omega in omegas]
 
 plt.figure(figsize=(10, 6))
