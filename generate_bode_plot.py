@@ -1,7 +1,7 @@
 import numpy as np; import matplotlib.pyplot as plt
 
-poles = [-12678 + 12575j, -12678 - 12575j, -222 + 220j, -222 - 220j]
-zeros =  [0 +0j, 0 + 0j]
+poles = [-3333.33 + 31415.9j, -3333.33 - 31415.9j, 10000+0j]
+zeros =  []
 
 def geom_magnitude_func(omega, poles, zeros):
     product_poles = 1
@@ -16,7 +16,7 @@ def geom_magnitude_func(omega, poles, zeros):
         product_zeros *= zero_dist
 
     linear_magnitude = (product_zeros / product_poles)
-    dB_magnitude = 20 * np.log10(linear_magnitude)
+    dB_magnitude = (20 * np.log10(linear_magnitude)) +259.77
     return dB_magnitude
 
 omegas = np.logspace(-1, 5, 500) 
