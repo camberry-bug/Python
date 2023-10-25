@@ -1,9 +1,9 @@
 from primelibpy import Prime
 import sympy
+import math
 import random
 
 def closest_prime(n):
-    """Find the closest prime to a number."""
     distance = 0
     while True:
         if sympy.isprime(n + distance):
@@ -11,9 +11,23 @@ def closest_prime(n):
         if sympy.isprime(n - distance):
             return n - distance
         distance += 1
+def is_coprime(a, b):
+    return math.gcd(a, b) == 1
+def encrypt(Message, PU):
+    M = int.from_bytes(Message.encode(), 'big')  # Convert string to integer
+    Cyphertext = pow(M, PU[1], PU[0])
+    return Cyphertext
+def decrypt(Cyphertext, PR):
+    Message = pow(Cyphertext, PR[1], PR[0])
+    return Message.to_bytes((Message.bit_length() + 7) // 8, 'big').decode()
+def encrypt_chunked(Message, PU):
+    chunks = Message.split(' ')  # Split message into chunks based on spaces
+    encrypted_chunks = [encrypt(chunk, PU) for chunk in chunks]
+    return encrypted_chunks
+def decrypt_chunked(encrypted_chunks, PR):
+    decrypted_chunks = [decrypt(chunk, PR) for chunk in encrypted_chunks]
+    return ' '.join(decrypted_chunks)
 
-
-# Get larger primes for security
 randomNum1 = random.randint(1000000, 100000000)
 randomNum2 = random.randint(1000000, 100000000)
 
@@ -27,13 +41,6 @@ q = closest_prime(randomNum2)
 n = p * q
 z = (p-1) * (q-1)
 
-def gcd(a, b):
-    while b:
-        a, b = b, a % b
-    return a
-
-def is_coprime(a, b):
-    return gcd(a, b) == 1
 # Use a fixed small value for e that's coprime to z
 e = 65537
 while not is_coprime(e, z):
@@ -51,24 +58,6 @@ d = x1 % m0
 PR = [n, d]
 PU = [n, e]
 
-def encrypt(Message, PU):
-    M = int.from_bytes(Message.encode(), 'big')  # Convert string to integer
-    Cyphertext = pow(M, PU[1], PU[0])
-    return Cyphertext
-
-def decrypt(Cyphertext, PR):
-    Message = pow(Cyphertext, PR[1], PR[0])
-    return Message.to_bytes((Message.bit_length() + 7) // 8, 'big').decode()
-
-def encrypt_chunked(Message, PU):
-    chunks = Message.split(' ')  # Split message into chunks based on spaces
-    encrypted_chunks = [encrypt(chunk, PU) for chunk in chunks]
-    return encrypted_chunks
-
-def decrypt_chunked(encrypted_chunks, PR):
-    decrypted_chunks = [decrypt(chunk, PR) for chunk in encrypted_chunks]
-    return ' '.join(decrypted_chunks)
-
 # Test
 M = input("Enter message to encrypt:")
 print("Message = ", M)
@@ -77,3 +66,6 @@ print("Cypher = ", C)
 D = decrypt_chunked(C, PR)
 print("Decrypted Message = ", D)
 print(p, q, n, z, e, d)
+
+# Citations:
+# https://www.geeksforgeeks.org/check-two-numbers-co-prime-not/
